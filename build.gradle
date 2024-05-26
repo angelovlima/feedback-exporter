@@ -30,6 +30,16 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	// Thymeleaf dependency
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	// Flying Saucer PDF dependency
+	implementation 'org.xhtmlrenderer:flying-saucer-core:9.1.22'
+	implementation 'org.xhtmlrenderer:flying-saucer-pdf-openpdf:9.1.22'
+
+	// Additional dependencies for Flying Saucer
+	implementation 'org.apache.xmlgraphics:batik-dom:1.14'
+	implementation 'org.apache.xmlgraphics:batik-svggen:1.14'
 }
 
 tasks.named('test') {

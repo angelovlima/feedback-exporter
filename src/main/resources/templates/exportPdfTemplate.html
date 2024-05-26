@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Export PDF</title>
+    <link th:href="@{classpath:/static/styles/styles.css}" rel="stylesheet" />
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+<div class="content">
+    <table>
+        <thead>
+        <tr>
+            <th th:each="header : ${dtoList[0].headers}" th:text="${header}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="dto : ${dtoList}">
+            <td th:each="data : ${dto.data}" th:text="${data}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:replace="~{footer :: footer}"></div>
+<div th:replace="~{footer-final :: footer-final}"></div>
+</body>
+</html>

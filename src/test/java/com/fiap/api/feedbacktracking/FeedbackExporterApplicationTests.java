@@ -1,4 +1,4 @@
-package com.fiap.api.feedbackexporter;
+package com.fiap.api.feedbacktracking;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
