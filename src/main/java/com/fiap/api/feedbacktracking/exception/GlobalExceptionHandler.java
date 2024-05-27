@@ -27,4 +27,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleGeneralException(Exception ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(ExportIllegalArgumentException.class)
+    public ResponseEntity<String> handleExportIllegalArgumentException(ExportIllegalArgumentException exportIllegalArgumentException) {
+        return new ResponseEntity<>(exportIllegalArgumentException.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ExportIOException.class)
+    public ResponseEntity<String> handleExportIllegalArgumentException(ExportIOException exportIOException) {
+        return new ResponseEntity<>(exportIOException.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

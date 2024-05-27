@@ -1,6 +1,7 @@
 package com.fiap.api.feedbacktracking.service;
 
-import com.fiap.api.feedbacktracking.exception.ExportExceptionHandler;
+import com.fiap.api.feedbacktracking.exception.ExportIOException;
+import com.fiap.api.feedbacktracking.exception.ExportIllegalArgumentException;
 import com.fiap.api.feedbacktracking.model.dto.ExportableDTO;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
@@ -31,12 +32,11 @@ public class ExportPdfService implements ExportDataService {
     }
 
     @Override
-    public void export(HttpServletResponse response, List<? extends ExportableDTO> dtoList) {
+    public void export(HttpServletResponse response, List<? extends ExportableDTO> dtoList) throws ExportIOException {
+        if (dtoList == null || dtoList.isEmpty()) {
+            throw new ExportIllegalArgumentException("A lista de dados não pode ser nula ou vazia.");
+        }
         try {
-            if (dtoList == null || dtoList.isEmpty()) {
-                throw new IllegalArgumentException("Data list cannot be null or empty");
-            }
-
             String htmlContent = generateHtmlContent(dtoList);
 
             ByteArrayOutputStream pdfOutputStream = generatePdfFromHtml(htmlContent);
@@ -47,11 +47,9 @@ public class ExportPdfService implements ExportDataService {
 
             response.getOutputStream().write(pdfOutputStream.toByteArray());
         } catch (IllegalArgumentException e) {
-            ExportExceptionHandler.handleException(response, HttpServletResponse.SC_BAD_REQUEST, "Invalid data: " + e.getMessage());
+            throw new ExportIllegalArgumentException("Argumento ilegal ou inapropriado fornecido para o método de exportação de feedback em PDF.", e);
         } catch (IOException e) {
-            ExportExceptionHandler.handleException(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "IO error: " + e.getMessage());
-        } catch (Exception e) {
-            ExportExceptionHandler.handleException(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unexpected error: " + e.getMessage());
+            throw new ExportIOException("Erro durante a manipulação dos arquivos PDF.", e);
         }
     }
 
@@ -62,13 +60,16 @@ public class ExportPdfService implements ExportDataService {
     }
 
     private ByteArrayOutputStream generatePdfFromHtml(String htmlContent) throws IOException {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ITextRenderer renderer = new ITextRenderer();
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            ITextRenderer renderer = new ITextRenderer();
 
-        renderer.setDocumentFromString(htmlContent);
-        renderer.layout();
-        renderer.createPDF(outputStream);
+            renderer.setDocumentFromString(htmlContent);
+            renderer.layout();
+            renderer.createPDF(outputStream);
 
-        return outputStream;
+            return outputStream;
+        } catch (IOException e) {
+            throw new ExportIOException("Erro ao gerar PDF a partir do HTML.", e);
+        }
     }
 }

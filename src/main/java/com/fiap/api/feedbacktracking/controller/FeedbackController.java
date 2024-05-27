@@ -1,5 +1,6 @@
 package com.fiap.api.feedbacktracking.controller;
 
+import com.fiap.api.feedbacktracking.exception.ExportIOException;
 import com.fiap.api.feedbacktracking.model.dto.FeedbackDTO;
 import com.fiap.api.feedbacktracking.service.FeedbackService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -56,13 +57,13 @@ public class FeedbackController {
 
     @GetMapping("/export/csv")
     @ResponseStatus(HttpStatus.OK)
-    public void exportCSV(HttpServletResponse httpServletResponse) {
+    public void exportCSV(HttpServletResponse httpServletResponse) throws ExportIOException {
         feedbackService.exportCSV(httpServletResponse);
     }
 
     @GetMapping("/export/pdf")
     @ResponseStatus(HttpStatus.OK)
-    public void exportPDF(HttpServletResponse httpServletResponse) {
+    public void exportPDF(HttpServletResponse httpServletResponse) throws ExportIOException {
         feedbackService.exportPDF(httpServletResponse);
     }
 }

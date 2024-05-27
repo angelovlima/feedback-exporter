@@ -1,5 +1,6 @@
 package com.fiap.api.feedbacktracking.service;
 
+import com.fiap.api.feedbacktracking.exception.ExportIOException;
 import com.fiap.api.feedbacktracking.exception.FeedbackCategoryNotFoundException;
 import com.fiap.api.feedbacktracking.exception.FeedbackNotFoundException;
 import com.fiap.api.feedbacktracking.model.dto.FeedbackDTO;
@@ -115,12 +116,12 @@ public class FeedbackService {
         feedbackRepository.deleteById(id);
     }
 
-    public void exportCSV(HttpServletResponse httpServletResponse) {
+    public void exportCSV(HttpServletResponse httpServletResponse) throws ExportIOException {
         List<FeedbackDTO> feedbackDTOList = findAll();
         exportCsvService.export(httpServletResponse, feedbackDTOList);
     }
 
-    public void exportPDF(HttpServletResponse httpServletResponse) {
+    public void exportPDF(HttpServletResponse httpServletResponse) throws ExportIOException {
         List<FeedbackDTO> feedbackDTOList = findAll();
         exportPdfService.export(httpServletResponse, feedbackDTOList);
     }
